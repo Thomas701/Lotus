@@ -1,3 +1,6 @@
+
+![_6d9dfe74-2534-4ee6-b25a-89eedd6c1f7c](https://github.com/Thomas701/Lotus/assets/50084075/b4f9592f-a040-460e-9705-bcd0ebc41c4b)
+
 # How to install ?
 
 - Download .zip
