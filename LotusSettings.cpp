@@ -1,0 +1,190 @@
+#include "pch.h"
+#include "Lotus.h"
+
+std::string replay_path;
+std::string plugin_path;
+bool detect = false;
+bool enable_Plugin;
+bool keep;
+bool own_Stat;
+int pluginTime = 0;
+int replayTime = 0;
+
+void Lotus::RenderSettings()
+{
+    ImGui::Text("Welcome to the Lotus Plugin");
+
+
+    if (detect == false)
+    {
+        initVariable();
+        detect = true;
+    }
+    if (pluginTime > 0)
+        pluginTime--;
+
+    if (replayTime > 0)
+        replayTime--;
+
+    LOG("#####->{}", plugin_path);
+    LOG("#####->{}", replay_path);
+
+    /*----------------------ENABLE BUTTON--------------------------*/
+    CVarWrapper ENABLE_PLUGIN = cvarManager->getCvar("enablePlugin");
+    if (!ENABLE_PLUGIN) return;
+    enable_Plugin = ENABLE_PLUGIN.getBoolValue();
+    if (ImGui::Checkbox("Enable plugin", &enable_Plugin)) { ENABLE_PLUGIN.setValue(enable_Plugin); }
+    if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Enable or disable MynoPlugin"); }
+
+    if (!enable_Plugin)
+        return;
+
+    CVarWrapper ENABLE_OWNSTAT = cvarManager->getCvar("OwnStat");
+    if (!ENABLE_OWNSTAT) return;
+    own_Stat = ENABLE_OWNSTAT.getBoolValue();
+    if (ImGui::Checkbox("Show Statistics", &own_Stat)) { ENABLE_OWNSTAT.setValue(own_Stat); }
+    if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Enable or disable OwnStat"); }
+
+    /*----------------Replays---------------------*/
+    ImGui::Text("Replays Analyser");
+
+    static char pluginPath[256] = "";
+    ImGui::InputText("Plugin Path", pluginPath, 256);
+    if (ImGui::Button("Valider##Plugin")) {
+        plugin_path = std::string(pluginPath);
+        std::string lotusDirectory = "..\\..\\Lotus";
+        std::string secondPath = plugin_path;
+
+        pluginTime = 500;
+        if (!std::filesystem::exists(lotusDirectory)) {
+            std::filesystem::create_directory(lotusDirectory);
+        }
+        std::string filePath = lotusDirectory + "\\plugin_path.txt";
+        std::ofstream outputFile(filePath);
+
+        if (outputFile.is_open()) {
+            outputFile << plugin_path;
+            outputFile.close();
+        }
+        else {
+            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
+        }
+
+        if (replay_path != "")
+        {
+            filePath = secondPath + "\\replay_path.txt";
+            std::ofstream outputFile2(filePath);
+
+            if (outputFile2.is_open()) {
+                outputFile2 << replay_path;
+                outputFile2.close();
+            }
+            else {
+                std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
+            }
+        }
+    }
+    if (pluginTime > 0)
+        ImGui::Text("Path saved!");
+
+    if (plugin_path == "")
+        return;
+
+    static char replayPath[256] = "";
+    ImGui::InputText("Replay Path", replayPath, 256);
+    if (ImGui::Button("Valider##Replay")) {
+        replay_path = std::string(replayPath);
+        std::string lotusDirectory = "..\\..\\Lotus";
+        std::string secondPath = plugin_path;
+        replayTime = 500;
+        if (!std::filesystem::exists(lotusDirectory)) {
+            std::filesystem::create_directory(lotusDirectory);
+        }
+        std::string filePath = lotusDirectory + "\\replay_path.txt";
+        std::ofstream outputFile(filePath);
+
+        if (outputFile.is_open()) {
+            outputFile << replay_path;
+            outputFile.close();
+        }
+        else {
+            std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour l'écriture." << std::endl;
+        }
+
+        filePath = secondPath + "\\replay_path.txt";
+        std::ofstream outputFile2(filePath);
+
+        if (outputFile2.is_open()) {
+            outputFile2 << replay_path;
+            outputFile2.close();
+        }
+        else {
+            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
+        }
+    }
+
+    if (replayTime > 0)
+        ImGui::Text("Path saved!");
+
+    ImGui::Text("");
+
+    CVarWrapper ENABLE_KEEP = cvarManager->getCvar("keep");
+    if (!ENABLE_KEEP) return;
+    own_Stat = ENABLE_KEEP.getBoolValue();
+    if (ImGui::Checkbox("Keep the replays?", &keep)) { ENABLE_KEEP.setValue(keep); }
+    if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Enable or disable keep"); }
+
+    ImGui::Text("");
+    if (replay_path == "" || plugin_path == "")
+    {
+        ImGui::Text("IMPOSSIBLE :O , Replay_path or plugin path is empty !");
+        return;
+    }
+
+    if (ImGui::Button("Save Data")) 
+    {
+        replay_path = convToBackSlash(replay_path);
+        plugin_path = convToBackSlash(plugin_path);
+        saveDATA(replay_path, plugin_path);
+        manageReplayFiles(replay_path, plugin_path, keep);
+        getData(replay_path, plugin_path);
+    }
+
+}
+
+void Lotus::initVariable()
+{
+    std::string replayDirectory = "..\\..\\Lotus";
+    std::string replayFilePath = replayDirectory + "\\replay_path.txt";
+
+    if (std::filesystem::exists(replayFilePath)) {
+        std::ifstream replayFile(replayFilePath);
+        if (replayFile.is_open()) {
+            std::getline(replayFile, replay_path);
+            replayFile.close();
+        }
+        else {
+            std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour la lecture." << std::endl;
+        }
+    }
+    else {
+        std::cout << "Erreur : Le fichier replay_path.txt n'existe pas." << std::endl;
+    }
+
+    std::string lotusDirectory = "..\\..\\Lotus";
+    std::string pluginFilePath = lotusDirectory + "\\plugin_path.txt";
+
+    if (std::filesystem::exists(pluginFilePath)) {
+        std::ifstream pluginFile(pluginFilePath);
+        if (pluginFile.is_open()) {
+            std::getline(pluginFile, plugin_path);
+            pluginFile.close();
+        }
+        else {
+            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour la lecture." << std::endl;
+        }
+    }
+    else {
+        std::cout << "Erreur : Le fichier plugin_path.txt n'existe pas." << std::endl;
+    }
+}
