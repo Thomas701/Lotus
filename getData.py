@@ -32,6 +32,8 @@ for filename in os.listdir(json_dir):
         with open(json_path) as json_file:
             data = json.load(json_file)
 
+        count = 0
+
         # Récupération des informations du jeu
         game_metadata = data['gameMetadata']
         game_id = game_metadata.get('id', 0)
@@ -129,8 +131,10 @@ for filename in os.listdir(json_dir):
                 total_dribbles, total_aerials, total_clears, time_at_slow_speed,
                 time_at_super_sonic, time_at_boost_speed, total_carries, total_flicks,
                 longest_carry, total_carry_time, fastest_carry_speed, variance_ball_z_velocity,
-                total_kickoffs, num_time_go_to_ball, num_time_first_touch, average_boost_used
+                total_kickoffs, num_time_go_to_ball, num_time_first_touch, average_boost_used,
+                (data['players'][(0 if count == 1 else 1)].get('name', "") if team_size == 1 else "")
             ])
+            count = count + 1
         os.remove(json_path)
 
 # Chemin du fichier de sortie
@@ -159,7 +163,7 @@ with open(output_file, 'a', newline='') as csvfile:
             "TotalDribbles", "TotalAerial", "TotalClears", "TimeAtSlowSpeed",
             "TimeAtSuperSonic", "TimeAtBoostSpeed", "TotalCarries", "TotalFlick",
             "LongestCarry", "TotalCarryTime", "FastestCarrySpeed", "VarianceBallZVelocity",
-            "TotalKickoffs", "NumTimeGoToBall", "NumTimeFirstTouch", "AverageBoostUsed"
+            "TotalKickoffs", "NumTimeGoToBall", "NumTimeFirstTouch", "AverageBoostUsed", "Adversaire"
         ])
 
     # Écriture des données des joueurs
