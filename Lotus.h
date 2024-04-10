@@ -32,6 +32,7 @@ class Lotus : public BakkesMod::Plugin::BakkesModPlugin
 	//cpp
 	std::string st(int nbr);
 	std::string convToBackSlash(const std::string& path);
+	std::string convToUndoBackSlash(const std::string& path);
 	void manageReplayFiles(const std::string& path, const std::string& path2, bool keep);
 	void initVariable();
 

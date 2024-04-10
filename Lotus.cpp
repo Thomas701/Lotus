@@ -50,7 +50,7 @@ void Lotus::onLoad()
 
 	gameWrapper->HookEvent("Function TAGame.Car_TA.SetVehicleInput",
 		[this](std::string eventName) {
-			getInfo();
+			//getInfo();
 		});
 }
 
@@ -69,23 +69,7 @@ void Lotus::debugStat(CanvasWrapper canvas, bool OwnStat)
 	{
 		if (OwnStat)
 		{
-			canvas.SetPosition(Vector2F{ 5.0, 100.0 });
-			canvas.DrawString("Mode de jeu: " + st(mode)
-				+ ", Mon Score: " + st(OwnTeamScore)
-				+ ", Score adverse: " + st(opponentTeamScore)
-				, 2.0, 2.0, false);
-			canvas.SetPosition(Vector2F{ 5.0, 150.0 });
-			canvas.DrawString("Points: " + st(OwnPoint)
-				+ ", Goals: " + st(OwnGoal)
-				+ ", Saves: " + st(OwnSave)
-				+ ", Assists: " + st(OwnAssist)
-				+ ", Shot: " + st(OwnShot)
-				+ ", TouchBall: " + st(OwnTouchBall)
-				, 2.0, 2.0, false);
-			canvas.SetPosition(Vector2F{ 5.0, 200.0 });
-			canvas.DrawString(
-				+ "x=" + std::to_string(OwnPos.X) + ",y=" + std::to_string(OwnPos.Z) + ",z=" + std::to_string(OwnPos.Y)
-				, 2.0, 2.0, false);
+
 		}
 	}
 	else
@@ -107,23 +91,23 @@ void Lotus::debugStat(CanvasWrapper canvas, bool OwnStat)
 
 void Lotus::getInfo()
 {
-	if (enablePlugin == false || gameIsNull() || getGame().GetPRIs().IsNull() || gameWrapper->GetPlayerController().IsNull() )
-		return;
+	//if (enablePlugin == false || gameIsNull() || getGame().GetPRIs().IsNull() || gameWrapper->GetPlayerController().IsNull() )
+	//	return;
 
-	mode = getMode();
+	//mode = getMode();
 
-	/*---------------------------Owner-----------------------------------*/
-	OwnPos = getOwnPos();
-	OwnPoint = getOwnPoint();
-	OwnTouchCar = getOwncarTouch();
-	OwnTouchBall = getOwnBallTouch();
-	OwnGoal = getOwnGoal();
-	OwnTeamScore = getOwnTeamScore();
-	OwnAssist = getOwnAssist();
-	OwnSave = getOwnShot();
-	OwnShot = getOwnShot();
-	/*-------------------------Opponent------------------------------------*/
-	opponentTeamScore = getOpponentTeamScore();
+	///*---------------------------Owner-----------------------------------*/
+	//OwnPos = getOwnPos();
+	//OwnPoint = getOwnPoint();
+	//OwnTouchCar = getOwncarTouch();
+	//OwnTouchBall = getOwnBallTouch();
+	//OwnGoal = getOwnGoal();
+	//OwnTeamScore = getOwnTeamScore();
+	//OwnAssist = getOwnAssist();
+	//OwnSave = getOwnShot();
+	//OwnShot = getOwnShot();
+	///*-------------------------Opponent------------------------------------*/
+	//opponentTeamScore = getOpponentTeamScore();
 }
 
 void Lotus::saveDATA(const std::string& replay_path, const std::string& plugin_path)
@@ -142,8 +126,11 @@ void Lotus::saveDATA(const std::string& replay_path, const std::string& plugin_p
 		std::cout << "Erreur lors de l'exécution de la commande PowerShell." << std::endl;
 	}
 
-	std::string python_command = "cd /d " + plugin_path + " && .\\.venv\\Scripts\\python.exe .\\rocketReplay.py";
+	std::string python_command = "cd /d " + plugin_path + " && .\\.venv1\\Scripts\\python.exe .\\rocketReplay.py";
 	system(python_command.c_str());
+
+	std::string python_command2 = "cd /d " + plugin_path + " && .\\.venv2\\Scripts\\python.exe .\\heatMap.py";
+	system(python_command2.c_str());
 
 	std::string data_path = plugin_path + "/Data";
 	for (const auto& entry : std::filesystem::directory_iterator(data_path)) {
@@ -194,7 +181,7 @@ void Lotus::manageReplayFiles(const std::string& path, const std::string& path2,
 
 void Lotus::getData(const std::string& replay_path, const std::string& plugin_path)
 {
-	std::string python_command = "cd /d " + plugin_path + " && .\\.venv\\Scripts\\python.exe .\\getData.py";
+	std::string python_command = "cd /d " + plugin_path + " && .\\.venv1\\Scripts\\python.exe .\\getData.py";
 	system(python_command.c_str());
 }
 

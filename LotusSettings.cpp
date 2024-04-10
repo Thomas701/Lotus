@@ -3,12 +3,14 @@
 
 std::string replay_path;
 std::string plugin_path;
+std::string name_player;
 bool detect = false;
 bool enable_Plugin;
 bool keep;
 bool own_Stat;
 int pluginTime = 0;
 int replayTime = 0;
+int modeDeJeu = 0;
 
 void Lotus::RenderSettings()
 {
@@ -86,7 +88,8 @@ void Lotus::RenderSettings()
     }
     if (pluginTime > 0)
         ImGui::Text("Path saved!");
-
+    std::string s1 = "Current Path : " + plugin_path;
+    ImGui::Text(s1.c_str());
     if (plugin_path == "")
         return;
 
@@ -125,7 +128,8 @@ void Lotus::RenderSettings()
 
     if (replayTime > 0)
         ImGui::Text("Path saved!");
-
+    std::string s2 = "Current Path : " + replay_path;
+    ImGui::Text(s2.c_str());
     ImGui::Text("");
 
     CVarWrapper ENABLE_KEEP = cvarManager->getCvar("keep");
@@ -148,8 +152,29 @@ void Lotus::RenderSettings()
         saveDATA(replay_path, plugin_path);
         manageReplayFiles(replay_path, plugin_path, keep);
         getData(replay_path, plugin_path);
+        replay_path = convToUndoBackSlash(replay_path);
+        plugin_path = convToUndoBackSlash(plugin_path);
     }
 
+    ImGui::Text("");
+    ImGui::Text("HeatMap Menu");
+
+    static char namePlayer[256] = "";
+    ImGui::InputText("Name Of Player", namePlayer, 256);
+
+    const char* items[] = { "1", "2", "3" };
+    ImGui::Combo("Mode de jeu", &modeDeJeu, items, IM_ARRAYSIZE(items));
+    //ImGui::Text("Value: %d", modeDeJeu);
+
+    if (modeDeJeu != 0 && modeDeJeu != 1 && modeDeJeu != 2)
+        return;
+
+    if (ImGui::Button("Show Heat map")) 
+    {
+        name_player = namePlayer;
+        std::string python_command = "cd /d " + plugin_path + " && .\\.venv2\\Scripts\\python.exe .\\displayHeatMap.py " + name_player + " " + st((modeDeJeu+1));
+        system(python_command.c_str());
+    }
 }
 
 void Lotus::initVariable()

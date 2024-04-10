@@ -17,7 +17,7 @@ std::string Lotus::st(int nbr)
 	return std::to_string(nbr);
 }
 
-std::string Lotus::convToBackSlash(const std::string& path) 
+std::string Lotus::convToBackSlash(const std::string& path)
 {
 	std::string result;
 	for (char c : path) {
@@ -25,6 +25,28 @@ std::string Lotus::convToBackSlash(const std::string& path)
 			result.push_back('\\');
 		}
 		result.push_back(c);
+	}
+	return result;
+}
+
+std::string Lotus::convToUndoBackSlash(const std::string& path)
+{
+	std::string result;
+	bool b = false;
+	for (char c : path) {
+		if (c == '\\') 
+		{
+			if (b == false)
+			{
+				result.push_back('\\');
+				b = true;
+			}
+		}
+		else
+		{
+			b = false;
+			result.push_back(c);
+		}
 	}
 	return result;
 }
