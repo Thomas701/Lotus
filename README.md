@@ -1,3 +1,6 @@
+
+![_6d9dfe74-2534-4ee6-b25a-89eedd6c1f7c](https://github.com/Thomas701/Lotus/assets/50084075/b4f9592f-a040-460e-9705-bcd0ebc41c4b)
+
 # How to install ?
 
 - Download .zip
@@ -30,12 +33,16 @@ https://github.com/nickbabcock
 
 # Result:
 
-![image](https://hackmd.io/_uploads/r1dWnNglC.png)
+![image](https://github.com/Thomas701/Lotus/assets/50084075/30658419-3f71-457b-87b5-aedf6692d0c5)
 
-![image](https://hackmd.io/_uploads/S12z3Nxx0.png)
 
-![image](https://hackmd.io/_uploads/HyWVn4xlR.png)
+![image](https://github.com/Thomas701/Lotus/assets/50084075/582d5843-377b-4946-8653-467e47715108)
 
-![image](https://hackmd.io/_uploads/SJYSnElgR.png)
+
+![image](https://github.com/Thomas701/Lotus/assets/50084075/9d82d7c6-cbde-4e14-87f5-3cf23942ecda)
+
+
+![image](https://github.com/Thomas701/Lotus/assets/50084075/7b82bacb-b287-42d2-8019-fad0ce4ac60e)
+
 
 If you have any problem, my discord: thomas701
