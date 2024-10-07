@@ -8,8 +8,8 @@ bool detect = false;
 bool enable_Plugin;
 bool keep;
 bool own_Stat;
-int pluginTime = 0;
-int replayTime = 0;
+int pluginTime = 0; // Temps avant que "Path save" disparaisse de l'interface graphique pour Plugin Path
+int replayTime = 0; // Temps avant que "Path save" disparaisse de l'interface graphique pour Replay Path
 int modeDeJeu = 0;
 
 void Lotus::RenderSettings()
@@ -22,16 +22,19 @@ void Lotus::RenderSettings()
         initVariable();
         detect = true;
     }
-    if (pluginTime > 0)
-        pluginTime--;
+    /*--- Si un des deux PATH est save, on affiche un message pendant un cours instant ---*/
+    if (pluginTime > 0)                                                                  //|
+        pluginTime--;                                                                    //|
+                                                                                         //|
+    if (replayTime > 0)                                                                  //|
+        replayTime--;                                                                    //|
+    /*------------------------------------------------------------------------------------*/
 
-    if (replayTime > 0)
-        replayTime--;
+    LOG("#####->{}", plugin_path); //Affiche le path du plugin
+    LOG("#####->{}", replay_path); //Affiche le path du replay
 
-    LOG("#####->{}", plugin_path);
-    LOG("#####->{}", replay_path);
+    /*-----------------------ENABLE BUTTON---------------------------*/
 
-    /*----------------------ENABLE BUTTON--------------------------*/
     CVarWrapper ENABLE_PLUGIN = cvarManager->getCvar("enablePlugin");
     if (!ENABLE_PLUGIN) return;
     enable_Plugin = ENABLE_PLUGIN.getBoolValue();
@@ -41,18 +44,13 @@ void Lotus::RenderSettings()
     if (!enable_Plugin)
         return;
 
-    CVarWrapper ENABLE_OWNSTAT = cvarManager->getCvar("OwnStat");
-    if (!ENABLE_OWNSTAT) return;
-    own_Stat = ENABLE_OWNSTAT.getBoolValue();
-    if (ImGui::Checkbox("Show Statistics", &own_Stat)) { ENABLE_OWNSTAT.setValue(own_Stat); }
-    if (ImGui::IsItemHovered()) { ImGui::SetTooltip("Enable or disable OwnStat"); }
-
-    /*----------------Replays---------------------*/
+    /*--------------------------Plugins Path-------------------------------*/
     ImGui::Text("Replays Analyser");
 
     static char pluginPath[256] = "";
     ImGui::InputText("Plugin Path", pluginPath, 256);
-    if (ImGui::Button("Valider##Plugin")) {
+    if (ImGui::Button("Valider##Plugin")) 
+    {
         plugin_path = std::string(pluginPath);
         std::string lotusDirectory = "..\\..\\Lotus";
         std::string secondPath = plugin_path;
@@ -71,7 +69,7 @@ void Lotus::RenderSettings()
         else {
             std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
         }
-
+        // Si le mec avait déjà rempli une information dans replayPath, cela sauvegarde aussi
         if (replay_path != "")
         {
             filePath = secondPath + "\\replay_path.txt";
@@ -82,7 +80,7 @@ void Lotus::RenderSettings()
                 outputFile2.close();
             }
             else {
-                std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
+                std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour l'écriture." << std::endl;
             }
         }
     }
@@ -93,9 +91,11 @@ void Lotus::RenderSettings()
     if (plugin_path == "")
         return;
 
+    /*--------------------------Replays Path-------------------------------*/
     static char replayPath[256] = "";
     ImGui::InputText("Replay Path", replayPath, 256);
-    if (ImGui::Button("Valider##Replay")) {
+    if (ImGui::Button("Valider##Replay")) 
+    {
         replay_path = std::string(replayPath);
         std::string lotusDirectory = "..\\..\\Lotus";
         std::string secondPath = plugin_path;
@@ -147,6 +147,8 @@ void Lotus::RenderSettings()
 
     if (ImGui::Button("Save Data")) 
     {
+        if (replay_path == "" || plugin_path == "") {return;}
+
         replay_path = convToBackSlash(replay_path);
         plugin_path = convToBackSlash(plugin_path);
         saveDATA(replay_path, plugin_path);
