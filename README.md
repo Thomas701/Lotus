@@ -15,7 +15,7 @@
 python -m venv .venv
 ```
 
-- Then, do: ctrl+b to compile the plugin.
+- Then, always with Visual Studio, do: ctrl+b to compile the plugin. ( you have to be sure that c++ extension is installed ).
 - Go to Rocket League, open BakkesMod and enable Lotus
 - Go to Bakkesmod and enable in Ranked tab: "Automatically save All Replays"
 - Enter your plugin_path (where you have extract the .zip) and replays_path (and save).
