@@ -67,9 +67,9 @@ void Lotus::RenderSettings()
             outputFile.close();
         }
         else {
-            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
+            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'ï¿½criture." << std::endl;
         }
-        // Si le mec avait déjà rempli une information dans replayPath, cela sauvegarde aussi
+        // Si le mec avait dï¿½jï¿½ rempli une information dans replayPath, cela sauvegarde aussi
         if (replay_path != "")
         {
             filePath = secondPath + "\\replay_path.txt";
@@ -80,7 +80,7 @@ void Lotus::RenderSettings()
                 outputFile2.close();
             }
             else {
-                std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour l'écriture." << std::endl;
+                std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour l'ï¿½criture." << std::endl;
             }
         }
     }
@@ -111,7 +111,7 @@ void Lotus::RenderSettings()
             outputFile.close();
         }
         else {
-            std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour l'écriture." << std::endl;
+            std::cout << "Erreur : Impossible d'ouvrir le fichier replay_path.txt pour l'ï¿½criture." << std::endl;
         }
 
         filePath = secondPath + "\\replay_path.txt";
@@ -122,7 +122,7 @@ void Lotus::RenderSettings()
             outputFile2.close();
         }
         else {
-            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'écriture." << std::endl;
+            std::cout << "Erreur : Impossible d'ouvrir le fichier plugin_path.txt pour l'ï¿½criture." << std::endl;
         }
     }
 

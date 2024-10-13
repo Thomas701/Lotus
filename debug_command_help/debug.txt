@@ -1,0 +1,4 @@
+powershell.exe -command "cd 'C:\Project\Bakkesmod\Lotus'; .\rrrocket.exe -n -c -m -p 'C:\Users\thodu\OneDrive\Documents\My Games\Rocket League\TAGame\DemosEpic'; exit"
+
+
+cd "C:\Project\Bakkesmod\Lotus"; .\.venv1\Scripts\python.exe .\rocketReplay.py

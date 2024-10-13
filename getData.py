@@ -48,14 +48,14 @@ for filename in os.listdir(json_dir):
             player_stats = player.get('stats', {})
             boost_stat = player_stats.get('boost', {})
             boost_usage = boost_stat.get('boostUsage', 0)
-            num_small_boosts = boost_stat.get('numSmallBoosts', 0)
-            num_large_boosts = boost_stat.get('numLargeBoosts', 0)
-            wasted_collection = boost_stat.get('wastedCollection', 0)
-            wasted_usage = boost_stat.get('wastedUsage', 0)
-            time_full_boost = (boost_stat.get('timeFullBoost', 0) / game_length ) * 100.00
-            time_low_boost = (boost_stat.get('timeLowBoost', 0) / game_length ) * 100.00
-            num_stolen_boosts = boost_stat.get('numStolenBoosts', 0)
-            average_boost_level = player_stats['boost'].get('averageBoostLevel', 0)
+            num_small_boosts = boost_stat.get('numSmallBoosts', 0)  #dead
+            num_large_boosts = boost_stat.get('numLargeBoosts', 0)  #dead
+            wasted_collection = boost_stat.get('wastedCollection', 0) #dead
+            wasted_usage = boost_stat.get('wastedUsage', 0)  #dead
+            time_full_boost = (boost_stat.get('timeFullBoost', 0) / game_length ) * 100.00  #dead
+            time_low_boost = (boost_stat.get('timeLowBoost', 0) / game_length ) * 100.00  #bug
+            num_stolen_boosts = boost_stat.get('numStolenBoosts', 0)  #dead
+            average_boost_level = player_stats['boost'].get('averageBoostLevel', 0)   #dead
 
             distance_stat = player_stats.get('distance', {})
             time_closest_to_ball = (distance_stat.get('timeClosestToBall', 0) / game_length ) * 100.00
@@ -88,10 +88,15 @@ for filename in os.listdir(json_dir):
 
             hitCounts_stat = player_stats.get('hitCounts', {})
             total_hits = hitCounts_stat.get('totalHits', 0)
+            total_passes = hitCounts_stat.get('totalPasses', 0) # dddd
             total_saves = hitCounts_stat.get('totalSaves', 0)
+            total_shots = hitCounts_stat.get('totalShots', 0) # dddd
             total_dribbles = hitCounts_stat.get('totalDribbles', 0)
+            total_dribbleConts = hitCounts_stat.get('totalDribbleConts', 0) # dddd
             total_aerials = hitCounts_stat.get('totalAerials', 0)
             total_clears = hitCounts_stat.get('totalClears', 0)
+            
+
 
             speed_stat = player_stats.get('speed', {})
             time_at_slow_speed = (speed_stat.get('timeAtSlowSpeed', 0) / game_length ) * 100.00
@@ -109,6 +114,9 @@ for filename in os.listdir(json_dir):
 
             kickoff_stat = player_stats.get('kickoffStats', {})
             total_kickoffs = kickoff_stat.get('totalKickoffs', 0)
+            num_time_boost = kickoff_stat.get('numTimeBoost', 0) #ddd
+            num_time_cheat = kickoff_stat.get('numTimeCheat', 0) #ddd
+            num_time_defend = kickoff_stat.get('numTimeDefend', 0) #ddd
             num_time_go_to_ball = kickoff_stat.get('numTimeGoToBall', 0)
             num_time_first_touch = kickoff_stat.get('numTimeFirstTouch', 0)
             average_boost_used = kickoff_stat.get('averageBoostUsed', 0)
@@ -127,11 +135,12 @@ for filename in os.listdir(json_dir):
                 time_on_ground, time_low_in_air, time_high_in_air, time_in_defending_half,
                 time_in_attacking_half, time_in_defending_third, time_in_neutral_third,
                 time_in_attacking_third, time_behind_ball, time_in_front_ball, time_near_wall,
-                time_in_corner, time_on_wall, average_speed, total_hits, total_saves,
-                total_dribbles, total_aerials, total_clears, time_at_slow_speed,
+                time_in_corner, time_on_wall, average_speed, total_hits, total_passes, total_saves,
+                total_shots, total_dribbles, total_dribbleConts, total_aerials, total_clears, time_at_slow_speed,
                 time_at_super_sonic, time_at_boost_speed, total_carries, total_flicks,
                 longest_carry, total_carry_time, fastest_carry_speed, variance_ball_z_velocity,
-                total_kickoffs, num_time_go_to_ball, num_time_first_touch, average_boost_used,
+                total_kickoffs, num_time_boost, num_time_cheat, num_time_defend,
+                num_time_go_to_ball, num_time_first_touch, average_boost_used,
                 (data['players'][(0 if count == 1 else 1)].get('name', "") if team_size == 1 else "")
             ])
             count = count + 1
@@ -159,11 +168,11 @@ with open(output_file, 'a', newline='') as csvfile:
             "TimeOnGround", "TimeLowInAir", "TimeHightInAir", "TimeInDefendingHalf",
             "TimeInAttackingHalf", "TimeInDefendingThird", "TimeInNeutralThird",
             "TimeInAttackingThird", "TimeBehindBall", "TimeInFrontBall", "TimeNearWall",
-            "TimeInCorner", "TimeOnWall", "AverageSpeed", "TotalHits", "TotalSaves",
-            "TotalDribbles", "TotalAerial", "TotalClears", "TimeAtSlowSpeed",
+            "TimeInCorner", "TimeOnWall", "AverageSpeed", "TotalHits", "TotalPasses", "TotalSaves",
+            "TotalShots", "TotalDribbles", "TotalDribblesConts", "TotalAerial", "TotalClears", "TimeAtSlowSpeed",
             "TimeAtSuperSonic", "TimeAtBoostSpeed", "TotalCarries", "TotalFlick",
             "LongestCarry", "TotalCarryTime", "FastestCarrySpeed", "VarianceBallZVelocity",
-            "TotalKickoffs", "NumTimeGoToBall", "NumTimeFirstTouch", "AverageBoostUsed", "Adversaire"
+            "TotalKickoffs", "numTimeBoost", "numTimeCheat", "numTimeDefend", "NumTimeGoToBall", "NumTimeFirstTouch", "AverageBoostUsed", "Adversaire"
         ])
 
     # Écriture des données des joueurs
