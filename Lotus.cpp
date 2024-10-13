@@ -130,7 +130,7 @@ void Lotus::saveDATA(const std::string& replay_path, const std::string& plugin_p
 	system(python_command.c_str());
 
 	std::string python_command2 = "cd /d " + plugin_path + " && .\\.venv2\\Scripts\\python.exe .\\heatMap.py";
-	system(python_command2.c_str());
+	system(python_command2.c_str()); 
 
 	std::string data_path = plugin_path + "/Data";
 	for (const auto& entry : std::filesystem::directory_iterator(data_path)) {
@@ -144,6 +144,7 @@ void Lotus::saveDATA(const std::string& replay_path, const std::string& plugin_p
 			std::filesystem::remove(entry.path());
 		}
 	}
+	//suppr cette ligne
 }
 
 void Lotus::manageReplayFiles(const std::string& path, const std::string& path2, bool keep) 
