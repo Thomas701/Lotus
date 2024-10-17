@@ -214,4 +214,5 @@ void Lotus::initVariable()
     else {
         std::cout << "Erreur : Le fichier plugin_path.txt n'existe pas." << std::endl;
     }
+    setPATH(plugin_path, replay_path);
 }

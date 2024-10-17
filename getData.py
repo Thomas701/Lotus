@@ -43,6 +43,20 @@ for filename in os.listdir(json_dir):
         team_size = game_metadata.get('teamSize', 0)
         playlist = game_metadata.get('playlist', 0)
 
+        # Création du customID
+        playerNames = []
+        playerScores = []
+
+        for player in data['players']:
+            playerNames.append(player.get('name', ""))
+            playerScores.append(player.get('score', 0))
+
+        playerNames.sort()
+        playerScores.sort()
+        names_str = ''.join(playerNames)
+        scores_str = ''.join(str(score) for score in playerScores)
+        customID = names_str + scores_str + str(team0_score) + str(team1_score)
+
         # Récupération des informations des joueurs
         for player in data['players']:
             player_stats = player.get('stats', {})
@@ -97,7 +111,6 @@ for filename in os.listdir(json_dir):
             total_clears = hitCounts_stat.get('totalClears', 0)
             
 
-
             speed_stat = player_stats.get('speed', {})
             time_at_slow_speed = (speed_stat.get('timeAtSlowSpeed', 0) / game_length ) * 100.00
             time_at_super_sonic = (speed_stat.get('timeAtSuperSonic', 0) / game_length ) * 100.00
@@ -121,10 +134,11 @@ for filename in os.listdir(json_dir):
             num_time_first_touch = kickoff_stat.get('numTimeFirstTouch', 0)
             average_boost_used = kickoff_stat.get('averageBoostUsed', 0)
 
+
             # Ajout des données du joueur à la liste
             player_data.append([
                 date_replay, 
-                game_id, team0_score, team1_score, game_length, team_size, playlist,
+                game_id, customID, team0_score, team1_score, game_length, team_size, playlist,
                 player['id']['id'], player.get('name', ""), player.get('score', 0),
                 player.get('goals', 0), player.get('assists', 0), player.get('saves', 0),
                 player.get('shots', 0), player.get('isOrange', 0), boost_usage,
@@ -146,6 +160,7 @@ for filename in os.listdir(json_dir):
             count = count + 1
         os.remove(json_path)
 
+
 # Chemin du fichier de sortie
 output_file = "LOTUS_DATA_BASE.csv"
 
@@ -159,7 +174,7 @@ with open(output_file, 'a', newline='') as csvfile:
         # Écriture de l'en-tête si le fichier n'existe pas
         writer.writerow([
             "DATE",
-            "GameID", "BlueScore", "OrangeScore", "GameLength", "TeamSize", "Mode",
+            "GameID", "CustomID", "BlueScore", "OrangeScore", "GameLength", "TeamSize", "Mode",
             "IdPlayer", "Name", "Score", "Goals", "Assists", "Saves", "Shots", "IsOrange",
             "BoostUsage", "SmallBoost", "LargeBoost", "BoostOverflow", "BoostDuringSuperSonic",
             "TimeFullBoost", "TimeLowBoost", "StolenBoost", "AverageBoostLevel",

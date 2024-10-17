@@ -26,6 +26,8 @@ class Lotus : public BakkesMod::Plugin::BakkesModPlugin
 	void onLoad() override;
 	void onUnload() override; // Uncomment and implement if you need a unload method
 	void debugStat(CanvasWrapper canvas, bool OwnStat);
+	void CreateCustomID();
+	void setPATH(const std::string & pluginPath, const std::string & replayPath);
 	//void updateMMR(UniqueIDWrapper id);
 	void getInfo();
 

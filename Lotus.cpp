@@ -5,15 +5,18 @@
 #include <windows.h>
 #include <shellapi.h>
 #include <algorithm>
+#include <fstream>
+#include <filesystem>
 
 
-BAKKESMOD_PLUGIN(Lotus, "write a plugin description here", plugin_version, PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(Lotus, "Lotus Plugin", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 bool enablePlugin = false; 
 bool OwnStat = false;
 bool Keep = false;
+bool SECURE = true;
 
 int mode = 0; 
 int OwnTouchBall = 0;
@@ -27,6 +30,8 @@ int OwnSave = 0;
 int OwnShot = 0;
 std::string OwnName;
 Vector OwnPos; 
+std::string pluginPATH = "";
+std::string replayPATH = "";
 
 int team;
 int sizeTeam = 0;
@@ -48,9 +53,39 @@ void Lotus::onLoad()
 			debugStat(canvas, OwnStat);
 		});
 
-	gameWrapper->HookEvent("Function TAGame.Car_TA.SetVehicleInput",
+	//gameWrapper->HookEvent("Function TAGame.GameEvent_Soccar_TA.OnAllTeamsCreated",
+	//	[this](std::string eventName) {
+	//		SECURE = true;
+	//	});
+	//Function TAGame.Car_TA.SetVehicleInput
+	//gameWrapper->HookEvent("Function GameEvent_TA.Countdown.BeginState",
+	//	[this](std::string eventName) {
+	//		if (!SECURE)
+	//			return;
+	//		LOG("---------------------------------------------");
+	//		LOG("---------------------------------------------");
+	//		LOG("---------------------------------------------");
+	//		LOG("########## APPEL DE LA FONCTION #############");
+	//		LOG("---------------------------------------------");
+	//		LOG("---------------------------------------------");
+	//		LOG("---------------------------------------------");
+	//		writeMMR();
+	//		SECURE = false;
+	//	});
+
+	if (!verif1) return;
+
+	gameWrapper->HookEvent("Function TAGame.GameEvent_Soccar_TA.OnMatchEnded",
 		[this](std::string eventName) {
-			//getInfo();
+
+			LOG("---------------------------------------------");
+			LOG("---------------------------------------------");
+			LOG("---------------------------------------------");
+			LOG("########## FIN DU MATCH #############");
+			LOG("---------------------------------------------");
+			LOG("---------------------------------------------");
+			LOG("---------------------------------------------");
+			CreateCustomID();
 		});
 }
 
@@ -74,6 +109,96 @@ void Lotus::debugStat(CanvasWrapper canvas, bool OwnStat)
 	}
 	else
 		canvas.DrawString("", 2.0, 2.0, false); // 2&3 argument: taille , 4 arguments = afficher l'ombre ou pass
+}
+
+
+void Lotus::CreateCustomID()
+{
+	std::string customID = "";
+
+	if (!gameWrapper->IsInOnlineGame())
+	{
+		LOG("Pas en partie en ligne, abandon de l'écriture du MMR");
+		return;
+	}
+
+	std::string filePath = pluginPATH + "\\mmr.csv";
+	bool fileExists = std::filesystem::exists(filePath);
+	std::ofstream mmrFile(filePath, std::ios::app);
+
+
+	if (mmrFile.is_open())
+	{
+		mmrFile.seekp(0, std::ios::end);
+		if (mmrFile.tellp() == 0)
+		{
+			mmrFile << "CustomID;Name;MMR\n";
+		}
+
+		ArrayWrapper<PriWrapper> pris = gameWrapper->GetCurrentGameState().GetPRIs();
+		int len = pris.Count();
+
+		std::vector<std::string> playerNames;
+		std::vector<int> playerScore;
+
+		for (PriWrapper player : pris)
+		{
+			if (player.IsNull())
+			{
+				LOG("########## PLAYER NULL #############");
+				continue;
+			}
+
+			ServerWrapper sw = gameWrapper->GetCurrentGameState(); if (!sw) return;
+			GameSettingPlaylistWrapper playlist = sw.GetPlaylist(); if (!playlist) return;
+
+			int score = player.GetMatchScore();
+			std::string playerName = player.GetPlayerName().ToString();
+			playerNames.push_back(playerName);
+			playerScore.push_back(score);
+		}
+
+		std::sort(playerNames.begin(), playerNames.end());
+		std::sort(playerScore.begin(), playerScore.end());
+		ServerWrapper sw = gameWrapper->GetCurrentGameState(); if (!sw) return;
+		int blueScore = sw.GetTeams().Get(0).GetScore();
+		int orangeScore = sw.GetTeams().Get(1).GetScore();
+
+		for (const std::string& id : playerNames) {customID += id;}
+		for (const int score : playerScore){customID += std::to_string(score);}
+
+		customID += std::to_string(blueScore);
+		customID += std::to_string(orangeScore);
+	
+		for (PriWrapper player : pris)
+		{
+			if (player.IsNull())
+			{
+				LOG("########## PLAYER NULL #############");
+				continue;
+			}
+
+			ServerWrapper sw = gameWrapper->GetCurrentGameState(); if (!sw) return;
+			GameSettingPlaylistWrapper playlist = sw.GetPlaylist(); if (!playlist) return;
+
+			int playListID = playlist.GetPlaylistId();
+			std::string playerName = player.GetPlayerName().ToString();
+			float mmr = gameWrapper->GetMMRWrapper().GetPlayerMMR(player.GetUniqueIdWrapper(), playListID);
+			//LOG("CustomID: " + customID + ",PlayerName: " + playerName + ",MMR: " + std::to_string(mmr) + ",PlayListID: " + std::to_string(playListID) + "TAILLE: " + std::to_string(len));
+			mmrFile << customID << ";" << playerName << ";" << mmr << "\n";
+		}
+		mmrFile.close();
+	}
+	else
+	{
+		LOG("Erreur lors de l'ouverture du fichier mmr.txt");
+	}
+}
+
+void Lotus::setPATH(const std::string & pluginPath, const std::string & replayPath)
+{
+	pluginPATH = pluginPath;
+	replayPATH = replayPath;
 }
 
 //void Lotus::updateMMR(UniqueIDWrapper id)
