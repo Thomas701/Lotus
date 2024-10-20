@@ -13,6 +13,8 @@
 
 ```txt
 python -m venv .venv
+python -m venv .venv1
+python -m venv .venv2
 ```
 
 - Then, do: ctrl+b to compile the plugin.
