@@ -17,8 +17,10 @@ python -m venv .venv
 
 - Then, do: ctrl+b to compile the plugin.
 - Go to Rocket League, open BakkesMod and enable Lotus
-- Go to Bakkesmod and enable in Ranked tab: "Automatically save All Replays"
+- Go to Bakkesmod and enable in Ranked tab: "Automatically save All Replays".
 - Enter your plugin_path (where you have extract the .zip) and replays_path (and save).
+- Restart Lotus Plugin.
+- Check if you have the good path in Lotus/.venv1/pyvenv.cfg ( same thing for Lotus/.venv2/pyvenv.cfg )
 - Play and when you want, click on "Save Data". (Choice if you want keep or not your replays)
 - Open RocketLeagueStats.pbix, right click on "transform data", then change the source and select your "LOTUS_DATA_BASE.csv", always in the same folder and don't forget to right click on PowerBI on your table on "refresh data".
 - You could see you statistics.
