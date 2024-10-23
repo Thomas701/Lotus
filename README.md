@@ -19,7 +19,7 @@
 - Extract
 - Download and install python 3.8.10  (https://www.python.org/downloads/release/python-3810/)
 - [**OPTIONAL**] Download Visual Studio with cpp extension  ( **OPTIONAL**, only if you want to build the plugin )
-- Download PowerBI Deskop
+- Download PowerBI Deskop (https://www.microsoft.com/fr-fr/download/details.aspx?id=58494)
 - Go to the folder where you have extract the .zip
 - Open a terminal in the good folder (where your plugin is) and executes the following 3 commands:
 
